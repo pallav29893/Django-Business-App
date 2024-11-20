@@ -1,0 +1,378 @@
+{% extends 'business_base.html' %} {% load static %} {% block content %}
+<div class="container">
+  <!-- Add Team Member Button -->
+  <div class="d-flex justify-content-end mb-4">
+    <button
+      style="background-color: #eb308e; color: black"
+      class="btn"
+      id="openAddModal"
+    >
+      Add New Team Member
+    </button>
+  </div>
+
+  <!-- Team Members Table -->
+  <div style="border: 1px solid black">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th style="text-align: center">First Name</th>
+          <th style="text-align: center">Last Name</th>
+          <th style="text-align: center">User Type</th>
+          <th style="text-align: center">Status</th>
+          <th style="text-align: center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Business Owner Row -->
+        <tr>
+          <td>{{ request.user.email }}</td>
+          <td style="text-align: center">{{ request.user.first_name }}</td>
+          <td style="text-align: center">{{ request.user.last_name }}</td>
+          <td style="text-align: center">{{ request.user.Role }}</td>
+          {% if request.user.status == "Active" %}
+          <td style="color: green; text-align: center">
+            {{ request.user.status }}
+          </td>
+          {% else %}
+          <td style="color: red; text-align: center">
+            {{ request.user.status }}
+          </td>
+          {% endif %}
+
+          <td style="text-align: center">--</td>
+        </tr>
+        <!-- Team Members Rows -->
+        {% for member in team_members %} {% if member.id != request.user.id %}
+        <tr>
+          <td>{{ member.email }}</td>
+          <td style="text-align: center">{{ member.first_name }}</td>
+          <td style="text-align: center">{{ member.last_name }}</td>
+          <td style="text-align: center">{{ member.Role }}</td>
+          {% if member.status == "Active" %}
+          <td style="color: green; text-align: center">{{ member.status }}</td>
+          {% else %}
+          <td style="color: red; text-align: center">{{ member.status }}</td>
+          {% endif %}
+          <td style="text-align: center">
+            <i
+              data-bs-toggle="modal"
+              data-bs-target="#editMemberModal"
+              data-member-id="{{ member.id }}"
+              data-email="{{ member.email }}"
+              data-first-name="{{ member.first_name }}"
+              data-last-name="{{ member.last_name }}"
+              class="edit-member fa-solid fa-pen-to-square"
+              style="cursor: pointer; color: #3838b8"
+            ></i>
+            <i
+              class="delete-button fa-solid fa-trash"
+              style="color: red"
+              data-member-id="{{ member.id }}"
+            ></i>
+          </td>
+        </tr>
+        {% endif %} {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Add Member Modal -->
+  <div class="modal fade" id="addMemberModal" tabindex="-1">
+    <div
+      id="loadingIndicator"
+      style="
+        display: none;
+        position: fixed;
+        top: 30%;
+        left: 45%;
+        transform: translate(-50%, -50%);
+        z-index: 999;
+      "
+      class="loader"
+    >
+      <!-- You can use a spinner or any loading animation here -->
+      <div class="spinner"></div>
+    </div>
+
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add New Team Member</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form id="addMemberForm">
+            <div class="mb-3">
+              <label class="form-label"
+                >Email Address <span class="text-danger">*</span></label
+              >
+              <input type="email" class="form-control" id="email" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label"
+                >First Name <span class="text-danger">*</span></label
+              >
+              <input type="text" class="form-control" id="firstName" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label"
+                >Last Name <span class="text-danger">*</span></label
+              >
+              <input type="text" class="form-control" id="lastName" required />
+            </div>
+          </form>
+        </div>
+        <div
+          class="modal-footer"
+          style="display: flex; justify-content: space-between"
+        >
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancel
+          </button>
+          <div>
+            <button
+              type="button"
+              class="btn"
+              id="saveNewMember"
+              style="background-color: #eb308e"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Member Modal -->
+  <div class="modal fade" id="editMemberModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Team Member</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="editMemberId" />
+          <div class="mb-3">
+            <label>Email Address <span class="text-danger">*</span></label>
+            <input
+              type="email"
+              class="form-control"
+              id="editMemberEmail"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label>First Name <span class="text-danger">*</span></label>
+            <input
+              type="text"
+              class="form-control"
+              id="editMemberFirstName"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label>Last Name <span class="text-danger">*</span></label>
+            <input
+              type="text"
+              class="form-control"
+              id="editMemberLastName"
+              required
+            />
+          </div>
+        </div>
+        <div
+          class="modal-footer"
+          style="display: flex; justify-content: space-between"
+        >
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancel
+          </button>
+          <div>
+            <button
+              type="button"
+              class="btn"
+              id="saveEditMember"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              style="background-color: #eb308e"
+            >
+              Save Changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- jQuery for handling team member operations -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function () {
+    // Open Add Member Modal
+    $("#openAddModal").on("click", function () {
+      $("#addMemberModal").modal("show");
+    });
+
+    // Save New Member
+    $("#saveNewMember").on("click", function () {
+      const email = $("#email").val();
+      const firstName = $("#firstName").val();
+      const lastName = $("#lastName").val();
+
+      $.ajax({
+        url: "/team/member/",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          email,
+          first_name: firstName,
+          last_name: lastName,
+        }),
+        headers: { "X-CSRFToken": getCookie("csrftoken") },
+        beforeSend: function () {
+          // Show loading indicator
+          showLoadingIndicator();
+        },
+        success: function (data) {
+          // Hide loading indicator
+          hideLoadingIndicator();
+          // Handle success response
+          handleResponse(data);
+        },
+        error: function () {
+          // Hide loading indicator
+          hideLoadingIndicator();
+          alert("An error occurred while adding team member");
+        },
+      });
+
+      // Function to show the loading indicator
+      function showLoadingIndicator() {
+        $("#loadingIndicator").show();
+      }
+
+      // Function to hide the loading indicator
+      function hideLoadingIndicator() {
+        $("#loadingIndicator").hide();
+      }
+
+      // Function to handle the AJAX response
+      function handleResponse(data) {
+        if (data.status === "success") {
+          alert(data.message);
+          location.reload();
+        } else {
+          alert(data.message);
+        }
+      }
+    });
+
+    // Handle Edit Member
+    $(".edit-member").on("click", function () {
+      const memberId = $(this).data("member-id");
+      const email = $(this).data("email");
+      const firstName = $(this).data("first-name");
+      const lastName = $(this).data("last-name");
+
+      $("#editMemberId").val(memberId);
+      $("#editMemberEmail").val(email);
+      $("#editMemberFirstName").val(firstName);
+      $("#editMemberLastName").val(lastName);
+    });
+
+    // Save Edit Member
+    $("#saveEditMember").on("click", function () {
+      const memberId = $("#editMemberId").val();
+      console.log("memberIdmemberIdmemberId", memberId);
+
+      const email = $("#editMemberEmail").val();
+      console.log("emailemailemail", email);
+
+      const firstName = $("#editMemberFirstName").val();
+      console.log("firstNamefirstNamefirstName", firstName);
+
+      const lastName = $("#editMemberLastName").val();
+      console.log("lastNamelastNamelastName", lastName);
+
+      $.ajax({
+        url: `/team/member/${memberId}/`,
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          email,
+          first_name: firstName,
+          last_name: lastName,
+        }),
+        headers: { "X-CSRFToken": getCookie("csrftoken") },
+        success: function (data) {
+          if (data.status === "success") {
+            location.reload();
+            alert(data.message);
+          } else {
+            alert(data.message);
+          }
+        },
+        error: function () {
+          alert("An error occurred while updating team member");
+        },
+      });
+    });
+
+    // Delete Member
+    $(".delete-button").on("click", function () {
+      const memberId = $(this).data("member-id");
+      console.log("memberIdmemberIdmemberId", memberId);
+
+      if (confirm("Are you sure you want to delete this team member?")) {
+        $.ajax({
+          url: `/team/member/${memberId}/`,
+          method: "POST",
+          headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "Content-Type": "application/json",
+          },
+          data: JSON.stringify({ action: "delete", member_id: memberId }), // Ensure you stringify the data
+          success: function (data) {
+            if (data.status === "success") {
+              location.reload();
+              alert(data.message);
+            } else {
+              alert(data.message);
+            }
+          },
+          error: function (xhr, status, error) {
+            console.error("Error:", error);
+            alert("An error occurred while deleting the team member");
+          },
+        });
+      }
+    });
+
+    // Helper function to get CSRF token
+    function getCookie(name) {
+      let cookieValue;
+    }
+  });
+</script>
+{% endblock %}

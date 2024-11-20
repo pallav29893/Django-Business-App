@@ -1,0 +1,606 @@
+{% extends 'business_base.html' %} {% block meta %}
+<meta name="ajax-add-quest" content="{% url 'addform' %}" />
+<meta name="ajax-add-rating" addform content="{% url 'addform' %}" />
+<meta name="csrf-token" content="{{ csrf_token }}" />
+
+{% endblock %} {% block content %}
+
+<h1>Feedback Form</h1>
+<div style="display: flex; justify-content: space-between; gap: 20px;">
+  <div style="width: 100%;">
+    <div
+      style="
+        border: 1px solid;
+        box-shadow: 3px 3px 3px #5a5457;
+        width: 100%;
+        background-color: #efefef;
+        border-radius: 10px;
+      "
+    ><form id="feedbackForm" method="post" style="padding: 20px; display: grid; width: 100%">
+      {% csrf_token %}
+      <label for="formName">Form Name:</label>
+      <input type="text" id="formName" name="formName" required /><br />
+  
+      <div>
+          <div id="textForm">
+              <div>
+                  <label for="Question">Question Title</label>
+                  <input type="text" name="question" id="question" value="" style="width: 100%" />
+              </div>
+              <div style="display: flex; justify-content: end">
+                  <button type="button" class="btn ques-button" style="color: white; background-color: #eb308e">Save</button>
+              </div>
+          </div>
+      </div>
+      <!-- {% for text in questions %} -->
+      <!-- <div id="question-{{ text.id }}">
+        <div style="display: flex;justify-content: space-between;">
+        <label for="Question">Question Title</label>
+      </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+              <input
+                  type="text"
+                  id="textQuestionsList"
+                  name="text"
+                  value="{{ text }}" 
+                  style="width: 100%"
+                  disabled
+              />
+          </div>
+      </div> -->
+  <!-- {% endfor %} -->
+
+  <!-- {% for rating in ratings %} -->
+  <!-- <div id="rating-{{ rating.id }}">
+    <div style="display: flex;justify-content: space-between;">
+    <label for="Rating">Rating Title</label>
+  </div>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <input
+        type="text"
+        id="ratingQuestionsList"
+        name="rating"
+        value="{{ rating }}"
+        style="width: 100%"
+        disabled
+      />
+     
+    </div>
+  </div> -->
+  <!-- {% endfor %} -->
+  
+  <div>
+          <div id="ratingForm">
+              <div>
+                  <label for="Rating">Rating Title</label><br />
+                  <input type="text" name="rating" id="rating" value="" style="width: 100%" />
+              </div>
+              <div style="display: flex; justify-content: end">
+                  <button type="button" class="btn rating-button" style="color: white; background-color: #eb308e">Save</button>
+              </div>
+              <!-- <div id="ratingList"></div> -->
+          </div>
+      </div>
+       
+      <div>
+          <label for="formType">Status:</label>
+          <select id="formType" name="formType">  <!-- Ensure this has the name attribute -->
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+          </select>
+      </div>
+      <br />
+  
+      <button type="submit" class="btn submit-form-button" style="color: white; background-color: #eb308e">Submit</button>
+  </form>
+  
+
+  <!-- add question dropdown  -->
+</div>
+</div>
+<div class="dropdown">
+  <button
+    class="btn btn-light dropdown-toggle"
+    type="button"
+    data-bs-toggle="dropdown"
+    aria-expanded="false"
+    style="font-size: 15px; background-color: #eb308e"
+  >
+    Add questions
+  </button>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="#" id="texts">Text</a></li>
+    <li><a class="dropdown-item" href="#" id="ratings">Rating</a></li>
+  </ul>
+</div>
+</div>
+
+<!-- </div> -->
+
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+  integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+<!-- <script>
+  $(document).ready(function () {
+    $("#textForm").hide();
+    $("#ratingForm").hide();
+
+    $("#texts").on("click", function () {
+      $("#textForm").show();
+      $("#ratingForm").hide();
+    });
+
+    $("#ratings").on("click", function () {
+      $("#ratingForm").show();
+      $("#textForm").hide();
+    });
+    // add questions
+    $(".ques-button").on("click", function () {
+      let question = $("input[name=question]").val();
+      //   let formType = $("#formtype1").val();
+      let url = $("meta[name=ajax-add-quest]").attr("content");
+      let csrftoken = $('meta[name="csrf-token"]').attr("content");
+
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: {
+          action: "add-question",
+          question: question,
+          //   form_type: formType,
+          csrfmiddlewaretoken: csrftoken,
+        },
+        success: function (responseData) {
+          if (responseData) {
+            alert(responseData["message"]);
+            $("input[name=question]").val("");
+          }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          alert("Error: " + textStatus + " - " + errorThrown);
+        },
+      });
+    });
+
+    // add rating
+    $(".rating-button").on("click", function () {
+      // event.preventDefault();
+
+      let rating = $("input[name=rating]").val();
+      //   let formType = $("#formtype2").val();
+      let url = $("meta[name=ajax-add-rating]").attr("content");
+      let csrftoken = $('meta[name="csrf-token"]').attr("content");
+
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: {
+          action: "add-rating",
+          rating: rating,
+          //   form_type: formType,
+          csrfmiddlewaretoken: csrftoken,
+        },
+        success: function (responseData) {
+          if (responseData) {
+            alert(responseData["message"]);
+            $("input[name=rating]").val("");
+          }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          alert("Error: " + textStatus + " - " + errorThrown);
+        },
+      });
+    });
+  });
+</script> -->
+
+<script>
+  $(document).ready(function () {
+    $("#textForm").hide();
+    $("#ratingForm").hide();
+
+    $("#texts").on("click", function () {
+        $("#textForm").show();
+        // $("#ratingForm").hide();
+    });
+
+    $("#ratings").on("click", function () {
+        $("#ratingForm").show();
+        // $("#textForm").hide();
+    });
+
+    // Add questions
+    // $(".ques-button").on("click", function () {
+    //     let question = $("input[name=question]").val();
+    //     let formName = $("input[name=formName]").val();
+    //     let url = $("meta[name=ajax-add-quest]").attr("content");
+    //     let csrftoken = $('meta[name="csrf-token"]').attr("content");
+
+    //     console.log("question",question)
+    //     console.log("url",url)
+    //     console.log("csrftoken",csrftoken)
+        
+    //     $.ajax({
+    //         type: "POST",
+    //         url: url,
+    //         data: {
+    //             action: "add-question",
+    //             question: question,
+    //             formName: formName,
+    //             csrfmiddlewaretoken: csrftoken,
+    //         },
+    //         success: function (responseData) {
+    //           console.log("responseDataresponseData",responseData);
+              
+    //             if (responseData) {
+    //                 alert(responseData["message"]);
+    //                 $("input[name=question]").val("");
+    //             }
+    //         },
+    //         error: function (jqXHR, textStatus, errorThrown) {
+    //             alert("Errorasdfas: " + textStatus + " - " + errorThrown);
+    //         },
+    //     });
+    // });
+
+  // Handle question submission
+$(".ques-button").on("click", function () {
+  let question = $("input[name=question]").val().trim();
+  if (question === "") {
+    alert("Please enter a question before saving.");
+    return;
+  }
+
+  // Create a new HTML element to display the question
+  let newQuestionDiv = $('<div>', { id: `question-${Date.now()}` });
+  let questionText = $('<input>', {
+    type: 'text',
+    name: 'text',
+    value: question,
+    style: 'width: 100%; margin-bottom: 10px;',
+    disabled: true,
+  });
+
+  newQuestionDiv.append(questionText);
+  $("#textForm").append(newQuestionDiv);
+
+  // Clear the question input field
+  $("input[name=question]").val("");
+});
+
+// Handle rating submission
+$(".rating-button").on("click", function (event) {
+  event.preventDefault();
+  // event.stopPropagation(); // Prevent the dropdown from closing
+
+  let rating = $("input[name=rating]").val().trim();
+  if (rating === "") {
+    alert("Please enter a rating before saving.");
+    return;
+  }
+
+  // Create a new HTML element to display the rating
+  let newRatingDiv = $('<div>', { id: `rating-${Date.now()}` });
+  let ratingText = $('<input>', {
+    type: 'text',
+    name: 'save-rating',
+    value: rating,
+    style: 'width: 100%;  margin-bottom: 10px;',
+    disabled: true,
+    // text: 'Rating: ' + rating,
+    // style: 'margin: 0;'
+  });
+  console.log(rating);
+  
+
+  newRatingDiv.append(ratingText);
+  $("#ratingForm").append(newRatingDiv); // Append to a dedicated list div
+
+  // Clear the rating input field
+  $("input[name=rating]").val("");
+});
+
+// Prevent dropdown from closing when clicking inside
+// $(".dropdown-menu").on("click", function (event) {
+//   event.stopPropagation();
+// });
+
+
+
+// $(".submit-form-button").on("click", function (event) {
+//   event.preventDefault(); // Prevent default form submission
+
+//   let form_type = $("input[name=formName]").val();
+//   let status = $("select[name=formType]").val();
+//   let url = $("meta[name=ajax-add-quest]").attr("content");
+//   let csrftoken = $('meta[name="csrf-token"]').attr("content");
+
+//   // Collect the question texts
+//   let questions = [];
+//   $("#textForm input[name=text]").each(function () {
+//     questions.push($(this).val());
+//   });
+
+//   // Collect the rating values
+//   let ratings = [];
+//   $("#ratingForm input[name=rating]").each(function () {
+//     ratings.push($(this).val());
+//   });
+
+//   $.ajax({
+//     type: "POST",
+//     url: url,
+//     data: {
+//       action: "submit-form",
+//       formName: form_type,
+//       formType: status,
+//       questions: JSON.stringify(questions),
+//       ratings: JSON.stringify(ratings),
+//       csrfmiddlewaretoken: csrftoken,
+//     },
+//     success: function (responseData) {
+//       if (responseData.Status) {
+//         alert(responseData.message);
+//         // Optionally clear the form or redirect
+//       } else {
+//         alert(responseData.message);
+//       }
+//     },
+//     error: function (jqXHR, textStatus, errorThrown) {
+//       alert("Error: " + textStatus + " - " + errorThrown);
+//     },
+//   });
+// });
+  
+
+// Submit form data
+    // $(".submit-form-button").on("click", function (event) {
+    //     event.preventDefault(); // Prevent default form submission
+
+    //     let form_type = $("input[name=formName]").val();
+    //     let status = $("select[name=formType]").val();
+    //     let url = $("meta[name=ajax-add-quest]").attr("content"); // Use appropriate URL
+    //     let csrftoken = $('meta[name="csrf-token"]').attr("content");
+
+    //     $.ajax({
+    //         type: "POST",
+    //         url: url,
+    //         data: {
+    //             action: "submit-form",
+    //             formName: form_type,
+    //             formType: status,
+    //             csrfmiddlewaretoken: csrftoken,
+    //         },
+    //         success: function (responseData) {
+    //             if (responseData) {
+    //                 alert(responseData["message"]);
+    //                 // Optionally clear the form or redirect
+    //             }
+    //         },
+    //         error: function (jqXHR, textStatus, errorThrown) {
+    //             alert("Error: " + textStatus + " - " + errorThrown);
+    //         },
+    //     });
+    // });
+
+    $(".submit-form-button").on("click", function (event) {
+  event.preventDefault(); // Prevent default form submission
+
+  let form_type = $("input[name=formName]").val();
+  let status = $("select[name=formType]").val();
+  let url = $("meta[name=ajax-add-quest]").attr("content");
+  let csrftoken = $('meta[name="csrf-token"]').attr("content");
+
+  // Collect the question texts
+  let questions = [];
+  $("#textForm input[name=text]").each(function () {
+    questions.push($(this).val());
+  });
+
+  // Collect the rating values
+  let ratings = [];
+  $("#ratingForm input[name=save-rating]").each(function () {
+    ratings.push($(this).val());
+  });
+
+  $.ajax({
+    type: "POST",
+    url: url,
+    data: {
+      action: "submit-form",
+      formName: form_type,
+      formType: status,
+      questions: JSON.stringify(questions),
+      ratings: JSON.stringify(ratings),
+      csrfmiddlewaretoken: csrftoken,
+    },
+    success: function (responseData) {
+      if (responseData.Status) {
+        alert(responseData.message);
+        // Optionally clear the form or redirect
+      } else {
+        alert(responseData.message);
+      }
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      alert("Error: " + textStatus + " - " + errorThrown);
+    },
+  });
+});
+  });
+
+//     $(".submit-form-button").on("click", function (event) {
+//   event.preventDefault(); // Prevent default form submission
+
+//   let form_type = $("input[name=formName]").val();
+//   let status = $("select[name=formType]").val();
+//   let url = $("meta[name=ajax-add-quest]").attr("content");
+//   let csrftoken = $('meta[name="csrf-token"]').attr("content");
+
+//   // Collect the question texts
+//   let questions = [];
+//   $("#textForm input[name=text]").each(function () {
+//     questions.push($(this).val());
+//   });
+
+//   $.ajax({
+//     type: "POST",
+//     url: url,
+//     data: {
+//       action: "submit-form",
+//       formName: form_type,
+//       formType: status,
+//       questions: JSON.stringify(questions),
+//       csrfmiddlewaretoken: csrftoken,
+//     },
+//     success: function (responseData) {
+//       if (responseData.Status) {
+//         alert(responseData.message);
+//         // Optionally clear the form or redirect
+//       } else {
+//         alert(responseData.message);
+//       }
+//     },
+//     error: function (jqXHR, textStatus, errorThrown) {
+//       alert("Error: " + textStatus + " - " + errorThrown);
+//     },
+//   });
+// });
+// });
+
+</script>
+
+ <!-- <script>
+//   $(document).ready(function () {
+//     $("#textForm").hide();
+//     $("#ratingForm").hide();
+
+//     $("#texts").on("click", function () {
+//         $("#textForm").show();
+//         $("#ratingForm").hide();
+//     });
+
+//     $("#ratings").on("click", function () {
+//         $("#ratingForm").show();
+//         $("#textForm").hide();
+//     });
+
+//     // Add questions
+//     $(".ques-button").on("click", function () {
+//         let question = $("input[name=question]").val();
+//         let formName = $("input[name=formName]").val();
+//         let url = $("meta[name=ajax-add-quest]").attr("content");
+//         let csrftoken = $('meta[name="csrf-token"]').attr("content");
+
+//         $.ajax({
+//             type: "POST",
+//             url: url,
+//             data: {
+//                 action: "add-question",
+//                 question: question,
+//                 formName: formName,
+//                 csrfmiddlewaretoken: csrftoken,
+//             },
+//             success: function (responseData) {
+//                 if (responseData.Status) {
+//                     alert(responseData["message"]);
+//                     // Append the new question to the display
+//                     $("#textForm").before(`
+//                         <div id="question-${responseData.id}">
+//                             <div style="display: flex; justify-content: space-between;">
+//                                 <label for="Question">${responseData.question}</label>
+//                             </div>
+//                             <div style="display: flex; justify-content: space-between; align-items: center;">
+//                                 <input type="text" id="textQuestionsList" name="text" value="${responseData.question}" style="width: 100%" disabled />
+//                             </div>
+//                         </div>
+//                     `);
+//                     $("input[name=question]").val(""); // Clear input
+//                 } else {
+//                     alert(responseData["message"]);
+//                 }
+//             },
+//             error: function (jqXHR, textStatus, errorThrown) {
+//                 alert("Error: " + textStatus + " - " + errorThrown);
+//             },
+//         });
+//     });
+
+//     // Add rating
+//     $(".rating-button").on("click", function () {
+//         let rating = $("input[name=rating]").val();
+//         let formName = $("input[name=formName]").val();
+//         let url = $("meta[name=ajax-add-rating]").attr("content");
+//         let csrftoken = $('meta[name="csrf-token"]').attr("content");
+
+//         $.ajax({
+//             type: "POST",
+//             url: url,
+//             data: {
+//                 action: "add-rating",
+//                 rating: rating,
+//                 formName: formName,
+//                 csrfmiddlewaretoken: csrftoken,
+//             },
+//             success: function (responseData) {
+//                 if (responseData.Status) {
+//                     alert(responseData["message"]);
+//                     // Append the new rating to the display
+//                     $("#ratingForm").before(`
+//                         <div id="rating-${responseData.id}">
+//                             <div style="display: flex; justify-content: space-between;">
+//                                 <label for="Rating">${responseData.rating}</label>
+//                             </div>
+//                             <div style="display: flex; justify-content: space-between; align-items: center;">
+//                                 <input type="text" id="ratingQuestionsList" name="rating" value="${responseData.rating}" style="width: 100%" disabled />
+//                             </div>
+//                         </div>
+//                     `);
+//                     $("input[name=rating]").val(""); // Clear input
+//                 } else {
+//                     alert(responseData["message"]);
+//                 }
+//             },
+//             error: function (jqXHR, textStatus, errorThrown) {
+//                 alert("Error: " + textStatus + " - " + errorThrown);
+//             },
+//         });
+//     });
+
+//     // Submit form data
+//     $(".submit-form-button").on("click", function (event) {
+//         event.preventDefault(); // Prevent default form submission
+
+//         let form_type = $("input[name=formName]").val();
+//         let status = $("select[name=formType]").val();
+//         let url = $("meta[name=ajax-add-quest]").attr("content");
+//         let csrftoken = $('meta[name="csrf-token"]').attr("content");
+
+//         $.ajax({
+//             type: "POST",
+//             url: url,
+//             data: {
+//                 action: "submit-form",
+//                 formName: form_type,
+//                 formType: status,
+//                 csrfmiddlewaretoken: csrftoken,
+//             },
+//             success: function (responseData) {
+//                 if (responseData) {
+//                     alert(responseData["message"]);
+//                     // Optionally clear the form or redirect
+//                 }
+//             },
+//             error: function (jqXHR, textStatus, errorThrown) {
+//                 alert("Error: " + textStatus + " - " + errorThrown);
+//             },
+//         });
+//     });
+// });
+// });
+
+// </script> 
+{% endblock %}

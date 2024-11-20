@@ -1,0 +1,45 @@
+{% extends 'business_base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up</title>
+  </head>
+  <body>
+    {% block content %}
+    <div style="display: flex; justify-content: center">
+      <div
+        class="form-container"
+        style="
+          border: 1px solid ;
+          box-shadow: 3px 3px 3px 3px #5a5457;
+          width: fit-content;
+          padding: 10px;
+          background-color: #efefef;
+          display: flex;
+          flex-direction: column;
+          border-radius: 10px;
+        "
+      >
+        <h2>Sign Up</h2>
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %} {{ form.non_field_errors }} {% for field in form %}
+          <br />
+          <div
+            class="form-group"
+            style="display: flex; justify-content: space-between"
+          >
+            {{ field.label_tag }} {{ field }} {{ field.errors }}
+          </div>
+          {% endfor %}
+          <br />
+          <button type="submit" class="btn" style="background-color: #eb308e">
+            Sign Up
+          </button>
+        </form>
+      </div>
+    </div>
+    {% endblock %}
+  </body>
+</html>

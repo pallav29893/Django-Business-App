@@ -1,0 +1,577 @@
+{% extends 'business_base.html' %} {% block meta %}
+<meta name="ajax-add-quest" content="{% url 'setup_feedback_form_details' form_type=form.name %}" />
+<meta name="ajax-edit-quest" content="{% url 'setup_feedback_form_details' form_type=form.name %}" />
+<meta name="ajax-add-rating" content="{% url 'setup_feedback_form_details' form_type=form.name %}" />
+<meta name="ajax-edit-rating" content="{% url 'setup_feedback_form_details' form_type=form.name %}" />
+<meta name="csrf-token" content="{{ csrf_token }}" />
+{% endblock %} {% block content %}
+{% if request.user.is_authenticated %}  
+
+<div style="display: flex; justify-content: space-between">
+  <div class="row" style="width: 100%">
+    <div class="col-md-10">
+      <div style="display: grid; gap: 15px">
+        
+
+            <!-- text form  -->
+        <!-- <div>
+          <form id="textForm">
+            <div
+              style="display: flex; flex-direction: column; gap: 5px"
+              class="bg-light p-3"
+            >
+              <div>
+                <label for="Question">Question Title</label>
+                <input
+                  type="text"
+                  name="question"
+                  id="question"
+                  value=""
+                  style="width: 100%"
+                />
+              </div>
+              <div style="display: flex;justify-content: end;">
+                <button type="submit" class="btn ques-button" style="color: white; background-color: #eb308e;">
+                  Save
+                </button>
+              </div>
+            </div>
+          </form>
+        </div> -->
+        <h2 style="font-family:Georgia, 'Times New Roman', Times, serif;">Questions for {{ form_type }}</h2>
+
+        <div>
+          <form id="textForm">
+            <div style="display: flex; flex-direction: column; gap: 5px" class="bg-light p-3">
+              <!-- <div>
+                <label for="formType">Feedback Form Type:</label>
+                <select id="formtype1">
+                  <option name="formType" value="dining">Dining</option>
+                  <option  name="formType" value="delivery">Delivery</option>
+                </select>
+              </div> -->
+              <div>
+                <label for="Question">Question Title</label>
+                <input type="text" name="question" id="question" value="" style="width: 100%" />
+              </div>
+              
+                <!-- <label><input type="radio" name="formType" value="dining" checked /> Dining</label>
+                <label><input type="radio" name="formType" value="delivery" /> Delivery</label> -->
+              <!-- <div>
+                <label for="status">Status:</label>
+                <select name="status" id="status">
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div> -->
+              <div style="display: flex; justify-content: end;">
+                <button type="button" class="btn ques-button" style="color: white; background-color: #eb308e;">
+                  Save
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        {% for text in questions %}
+        <div class="bg-light p-3" id="question-{{ text.id }}">
+          <div style="display: flex;justify-content: space-between;">
+          <label for="Question">Question Title</label>
+          <!-- <span style="margin-right: 42px;">Form Type: {{ text.form_type }}</span> -->
+        </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <input
+                    type="text"
+                    id="textQuestionsList"
+                    name="text"
+                    value="{{ text }}" 
+                    style="width: 100%"
+                    disabled
+                />
+                <div style="display: flex; padding: 5px; gap: 2px;">
+                    <i
+                        class="edit-button fa-solid fa-pen-to-square"
+                        data-question-id="{{ text.id }}"
+                        style="cursor: pointer;color: #3838b8;"
+                    ></i>
+                    <i
+                        class="delete-button fa-solid fa-trash"
+                        data-question-id="{{ text.id }}"
+                        style="cursor: pointer;color:#f44f4f;"
+                    ></i>
+                </div>
+                <button
+                    name="button"
+                    class="save-button btn"
+                    data-question-id="{{ text.id }}"
+                    style="display: none; background-color: #eb308e; color: white;"
+                >
+                    Save
+                </button>
+            </div>
+        </div>
+    {% endfor %}
+         <!-- rating form  -->
+      <h2 style="font-family:Georgia, 'Times New Roman', Times, serif;">Ratings for {{ form_type }}</h2>
+
+         <div>
+          <form id="ratingForm">
+            <div class="bg-light p-3" style="display: flex; flex-direction: column; gap: 5px">
+              <!-- <div>
+                <label for="formType">Feedback Form Type:</label>
+                <select id="formtype2">
+                  <option name="formType" value="dining">Dining</option>
+                  <option  name="formType" value="delivery">Delivery</option>
+                </select>
+              </div> -->
+              <div>
+              <label for="Rating">Rating Title</label><br />
+              <input
+                type="text"
+                name="rating"
+                id="rating"
+                value=""
+                style="width: 100%"
+              /></div>
+              <div  style="display: flex;justify-content: end;">
+              <button type="submit" class="btn rating-button" style="color: white; background-color: #eb308e;">
+                Save
+              </button>
+            </div>
+            </div>
+          </form>
+        </div>
+
+        {% for rating in ratings %}
+        <div id="rating-{{ rating.id }}" class="bg-light p-3">
+          <div style="display: flex;justify-content: space-between;">
+          <label for="Rating">Rating Title</label>
+          <!-- <span  style="margin-right: 42px;">Form Type: {{ rating.form_type }}</span> -->
+        </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <input
+              type="text"
+              id="ratingQuestionsList"
+              name="rating"
+              value="{{ rating }}"
+              style="width: 100%"
+              disabled
+            />
+            <div style="display: flex; align-items:center; padding: 5px; gap: 2px;">
+              <i
+                class="editt-button fa-solid fa-pen-to-square"
+                data-rating-id="{{ rating.id }}"
+                style="cursor: pointer;color: #3838b8;"
+              ></i>
+              <i
+                class="del-button fa-solid fa-trash"
+                data-rating-id="{{ rating.id }}"
+                style="cursor: pointer; color: #f44f4f;"
+              ></i>
+              <button
+                name="buttonn"
+                class="savve-button btn"
+                data-rating-id="{{ rating.id }}"
+                style="display: none; background-color: #eb308e;color: white;"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+        <!-- {% for text in questions %}
+        <div class="bg-light p-3" id="question-{{ text.id }}">
+          <label for="Question">Question Title</label><br />
+          <div
+            style="  
+              display: flex;
+              justify-content: space-around;
+              align-items: center;
+            "
+          >
+            <input
+              type="text"
+              id="textQuestionsList"
+              name="text"
+              value="{{ text }}"
+              style="width: 100%"
+              disabled
+            />
+            <div style="display: flex; padding: 5px; gap: 2px;">
+              <i
+                class="edit-button fa-solid fa-pen-to-square"
+                data-question-id="{{ text.id }}"
+                style="cursor: pointer;color:  #3838b8;"
+              ></i>
+              <i
+                class="delete-button fa-solid fa-trash"
+                data-question-id="{{ text.id }}"
+                style="cursor: pointer;color:#f44f4f;"
+              ></i>
+            </div>
+            <button
+              name="button"
+              class="save-button btn"
+              data-question-id="{{ text.id }}"
+              style="display: none; background-color: #eb308e; color: white;"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+        {% endfor %} -->
+
+      
+
+                 
+       
+      </div>
+    </div>
+            <!-- add question dropdown  -->
+  <div class="dropdown">
+    <button
+      class="btn btn-light dropdown-toggle"
+      type="button"
+      data-bs-toggle="dropdown"
+      aria-expanded="false"
+      style="font-size: 15px; background-color: #eb308e;"
+    >
+      Add questions
+    </button>
+    <ul class="dropdown-menu">
+      <li><a class="dropdown-item" href="#" id="texts">Text</a></li>
+      <li><a class="dropdown-item" href="#" id="ratings">Rating</a></li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+  integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+
+<!-- <script>
+  $(document).ready(function () {
+    $("#textForm").hide();
+    $("#ratingForm").hide();
+
+    $("#texts").on("click", function () {
+      $("#textForm").show();
+      $("#ratingForm").hide();
+    });
+
+    $("#ratings").on("click", function () {
+      $("#ratingForm").show();
+      $("#textForm").hide();
+    });
+
+    $(".ques-button").on("click", function (event) {
+      event.preventDefault(); 
+
+      let question = $("input[name=question]").val();
+      let url = $("meta[name=ajax-add-quest]").attr("content");
+      let csrftoken = $('meta[name="csrf-token"]').attr("content"); 
+
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: {
+          action: "add-question",
+          question: question,
+          csrfmiddlewaretoken: csrftoken, 
+        },
+        success: function (responseData) {
+          if (responseData) {
+            alert(responseData["message"]);
+            $("input[name=question]").val(""); 
+          }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          alert("Error: " + textStatus + " - " + errorThrown); 
+        },
+      });
+    });
+  });
+</script> -->
+
+<script>
+  $(document).ready(function () {
+    $("#textForm").hide();
+    $("#ratingForm").hide();
+
+    $("#texts").on("click", function () {
+      $("#textForm").show();
+      $("#ratingForm").hide();
+    });
+
+    $("#ratings").on("click", function () {
+      $("#ratingForm").show();
+      $("#textForm").hide();
+    });
+
+
+    $(".edit-button").on("click", function () {
+  let questionId = $(this).data("question-id");
+  let inputField = $("#question-" + questionId).find("input[name=text]");
+  let buttonField = $("#question-" + questionId).find("button[name=button]");
+
+  inputField.prop("disabled", false).focus();
+  buttonField.show();  
+  $(this).hide();     
+});
+
+// Save button click event
+$("button[name=button]").on("click", function (event) {
+  event.preventDefault();
+
+  let questionId = $(this).closest("[id^='question-']").attr("id").split("-")[1];
+  let inputField = $("#question-" + questionId).find("input[name=text]");
+  let updatedQuestion = inputField.val().trim();
+
+  // Input validation
+  if (!updatedQuestion) {
+    alert("Please enter a valid question.");
+    return;
+  }
+
+  let url = $("meta[name=ajax-edit-quest]").attr("content");
+  let csrftoken = $('meta[name="csrf-token"]').attr("content");
+
+  $.ajax({
+    type: "POST",
+    url: url,
+    data: {
+      action: "edit-question",
+      question_id: questionId,
+      new_text: updatedQuestion, 
+      csrfmiddlewaretoken: csrftoken,
+    },
+    success: function (responseData) {
+      if (responseData && responseData.message) {
+        alert(responseData.message);
+        inputField.prop("disabled", true); 
+        $(".edit-button[data-question-id='" + questionId + "']").show();
+        $(this).hide(); // Hide the save button
+      }
+    }.bind(this), 
+    error: function (jqXHR, textStatus, errorThrown) {
+      alert("Error: " + textStatus + " - " + errorThrown);
+    },
+  });
+});
+
+
+        // edit rating questiions 
+$(".editt-button").on("click", function () {
+  let ratingId = $(this).data("rating-id");
+  let inputField = $("#rating-" + ratingId).find("input[name=rating]");
+  let buttonField = $("#rating-" + ratingId).find("button[name=buttonn]");
+
+  inputField.prop("disabled", false).focus();
+  buttonField.show();  
+  $(this).hide();    
+});
+
+ // edit rating questiions
+$("button[name=buttonn]").on("click", function (event) {
+  event.preventDefault(); // Prevent default form submission
+
+  let ratingId = $(this).closest("[id^='rating-']").attr("id").split("-")[1];
+  let inputField = $("#rating-" + ratingId).find("input[name=rating]");
+  let updatedRating = inputField.val().trim(); // Trim whitespace
+
+  // Input validation
+  if (!updatedRating) {
+    alert("Please enter a valid rating.");
+    return;
+  }
+
+  let url = $("meta[name=ajax-edit-rating]").attr("content");
+  let csrftoken = $('meta[name="csrf-token"]').attr("content");
+
+  $.ajax({
+    type: "POST",
+    url: url,
+    data: {
+      action: "edit-rating",
+      rating_id: ratingId,
+      new_rating: updatedRating,  // Use new_rating instead of rating
+      csrfmiddlewaretoken: csrftoken,
+    },
+    success: function (responseData) {
+      if (responseData && responseData.message) {
+        alert(responseData.message);
+        inputField.prop("disabled", true); // Disable the input field
+        $(".editt-button[data-rating-id='" + ratingId + "']").show();
+        $(this).hide(); // Hide the save button
+      }
+    }.bind(this), // Bind 'this' to maintain context
+    error: function (jqXHR, textStatus, errorThrown) {
+      alert("Error: " + textStatus + " - " + errorThrown);
+    },
+  });
+});
+
+
+              // delete text question
+  $(".delete-button").on("click", function () {
+      let questionId = $(this).data("question-id"); 
+      let url = $("meta[name=ajax-delete-quest]").attr("content");
+      let csrftoken = $('meta[name="csrf-token"]').attr("content");
+
+      if (confirm("Are you sure you want to delete this question?")) {
+        $.ajax({
+          type: "POST",
+          url: url,
+          data: {
+            action: "delete-question",
+            question_id: questionId,
+            csrfmiddlewaretoken: csrftoken,
+          },
+          success: function (responseData) {
+            if (responseData.Status) {
+              alert(responseData.message);
+              $("#question-" + questionId).remove(); 
+            } else {
+              alert(responseData.message); 
+            }
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            alert("Error: " + textStatus + " - " + errorThrown);
+          },
+        });
+      }
+    });
+
+            // delete rating 
+  $(".del-button").on("click", function (e) {
+      let ratingId= $(this).data("rating-id"); 
+      let url = $("meta[name=ajax-delete-rating]").attr("content");
+      let csrftoken = $('meta[name="csrf-token"]').attr("content");
+
+      if (confirm("Are you sure you want to delete this question?")) {
+        $.ajax({
+          type: "POST",
+          url: url,
+          data: {
+            action: "delete-rating",
+            rating_id: ratingId, 
+            csrfmiddlewaretoken: csrftoken,
+          },
+          success: function (responseData) {
+            if (responseData.Status) {
+              alert(responseData.message);
+              $("#rating-" + ratingId).remove(); 
+            } else {
+              alert(responseData.message);
+            }
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            alert("Error: " + textStatus + " - " + errorThrown);
+          },
+        });
+      }
+    });
+
+  // $(".ques-button").on("click", function () {
+
+  //     let question = $("input[name=question]").val();
+  //     let url = $("meta[name=ajax-add-quest]").attr("content");
+  //     let csrftoken = $('meta[name="csrf-token"]').attr("content");
+
+  //     $.ajax({
+  //       type: "POST",
+  //       url: url,
+  //       data: {
+  //         action: "add-question",
+  //         question: question,
+  //         csrfmiddlewaretoken: csrftoken,
+  //       },
+  //       success: function (responseData) {
+  //         if (responseData) {
+  //           alert(responseData["message"]);
+  //           $("input[name=question]").val("");
+  //         }
+  //       },
+  //       error: function (jqXHR, textStatus, errorThrown) {
+  //         alert("Error: " + textStatus + " - " + errorThrown);
+  //       },
+  //     });
+  //   });
+
+          // add questions 
+  $(".ques-button").on("click", function () {
+
+    let question = $("input[name=question]").val();
+    console.log('questionquestionquestion',question);
+    
+    // let formType = $("#formtype1").val();
+    let url = $("meta[name=ajax-add-quest]").attr("content");
+    console.log('urlurlurlurl',url);
+    
+    let csrftoken = $('meta[name="csrf-token"]').attr("content");
+    console.log('csrftokencsrftokencsrftoken',csrftoken);
+    
+
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: {
+            action: "add-question",
+            question: question,
+            // form_type: formType,
+            csrfmiddlewaretoken: csrftoken,
+        },
+        success: function (responseData) {
+          console.log('responseDataresponseDataresponseData',responseData);
+          
+          if (responseData) {
+            alert(responseData["message"]);
+            $("input[name=question]").val("");
+          }
+        },
+     error: function (jqXHR, textStatus, errorThrown) {
+            alert("Error: " + textStatus + " - " + errorThrown);
+        },
+    });
+});
+
+        // add rating 
+  $(".rating-button").on("click", function () {
+    // event.preventDefault();
+
+    let rating = $("input[name=rating]").val();
+    // let formType = $("#formtype2").val();
+    let url = $("meta[name=ajax-add-rating]").attr("content");
+    let csrftoken = $('meta[name="csrf-token"]').attr("content");
+
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: {
+        action: "add-rating",
+        rating: rating,
+        // form_type: formType,
+        csrfmiddlewaretoken: csrftoken,
+      },
+      success: function (responseData) {
+        if (responseData) {
+          alert(responseData["message"]);
+          $("input[name=rating]").val("");
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        alert("Error: " + textStatus + " - " + errorThrown);
+      },
+    });
+  });
+});
+</script>
+{% endif %}
+{% endblock %}

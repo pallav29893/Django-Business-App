@@ -1,0 +1,267 @@
+
+/* .review-container {
+  width: 80%;
+  margin: 0 auto;
+  font-family: sans-serif;
+  border: 1px solid #ccc;
+  padding: 20px;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+} */
+
+/* .rating-container {
+  display: inline-block;
+  position: relative;
+} */
+
+/* .rating-stars {
+  unicode-bidi: bidi-override;
+  direction: rtl;
+  font-size: 25px;
+  cursor: pointer;
+} */
+
+/* .rating-stars .fa-star {
+  color: #ccc;
+} */
+/* 
+.rating-stars .fa-star:hover:before {
+  content: "\f005";
+  color: orange;
+}
+
+.rating-stars .fa-star-o:hover:before {
+  content: "\f005";
+  color: orange;
+}
+
+.rating-stars .selected {
+  color: orange;
+}
+
+.rating-stars .selected ~ .fa-star-o {
+  color: #ccc;
+}
+
+.rating-stars .selected ~ .fa-star-o:hover {
+  color: orange;
+} */
+
+.nav-pills .nav-link.feedbackActiveTab {
+  background-color: #eb308e; 
+  color: white; 
+}
+
+/* .rating {
+  color: orange;
+  font-size: 1.5em;
+} */
+
+/* Review Item Styling */
+/* .review-item {
+  border-bottom: 1px solid #eee;
+  padding: 15px 0;
+}
+
+.user-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.review-actions button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  cursor: pointer;
+  margin-right: 5px;
+} */
+
+/* business */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* body {
+  background-color: #f3f3f3;
+  padding: 20px;
+} */
+
+.review-container {
+  width: 100%;
+  margin: 0 auto;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.review-rating .stars {
+  font-size: 20px;
+  color: rgb(38, 223, 21);
+  border: 0px solid gray;
+  border-radius: 20px;
+  background-color: #f3f3f3;
+  padding: 5px;
+}
+
+.review-rating .results {
+  margin-left: 10px;
+  font-size: 14px;
+  color: #555;
+}
+
+.filter-tags span {
+  margin-right: 10px;
+  background-color: #efefef;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 14px;
+  color: #555;
+}
+
+.review-card {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+}
+
+.review-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.review-title h4 {
+  font-weight: 500;
+  font-size: 18px;
+}
+
+.review-title .review-date {
+  font-size: 12px;
+  color: #999;
+}
+
+/* .rating-stars i {
+  color: #ff6f00;
+} */
+
+.review-content {
+  border-top: 1px solid #efefef;
+  padding-top: 15px;
+  margin-top: 15px;
+}
+
+.review-user {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.user-name {
+  font-weight: bold;
+}
+
+.review-meta span {
+  font-size: 12px;
+  color: #007bff;
+  cursor: pointer;
+}
+
+.review-text {
+  color: #333;
+  background-color: #f3f3f3;
+  padding: 10px;
+  font-weight: 600;
+  font-size: 11px;
+  color: gray;
+  border-radius: 6px;
+}
+
+.review-footer {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #efefef;
+  padding-top: 10px;
+  margin-top: 15px;
+  font-size: 14px;
+  color: #666;
+}
+
+.response-status {
+  font-size: 12px;
+  color: #888;
+}
+
+.response-actions {
+  font-size: 12px;
+  color: #888;
+  text-transform: capitalize;
+}
+/* nnnnnnnnnnnnnnnn */
+
+.star-rating {
+  direction: rtl;
+  display: inline-flex;
+}
+
+.star-rating input {
+  display: none;
+}
+
+.star-rating label {
+  font-size: 30px;
+  color: lightgray;
+  cursor: pointer;
+}
+
+.star-rating input:checked ~ label {
+  color: gold;
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  color: gold;
+}
+
+
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #eb308e;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+

@@ -1,0 +1,27 @@
+{% extends 'blog/base.html' %}
+
+    {% block title %}<title>Blog Posts</title>{% endblock %}
+
+<body>
+    {% block content %}
+       
+    <div style="display: flex; flex-wrap: wrap;">
+        {% for post in posts %}
+              <div class="card" style="margin-right: 60px; width: 301px;margin-top: 70px; box-shadow: 10px 10px 15px #ffa500;">
+                <a href="{% url 'post_detail' post.slug %}" > <img style="width: 300px; height: 250px;" src="{% if post.feature_image %}{{post.feature_image.url}} {% else %} {% endif %}" class="card-img-top" alt="..."></a>
+                <div class="card-body" style="margin-bottom: 50px; height: 280px;">
+                  <h5 class="card-title"><a  style="text-decoration: none;" href="{% url 'post_detail' post.slug %}" >{{ post.title }}</a></h5>
+                  <h5 class="card-title">Category-<a  style="text-decoration: none;" href="{% url 'category_post_list' post.category.slug %}" >{{ post.category }}</a></h5>
+                  <p>Tag-
+                  {% for tag in post.tags.all %}
+                  <a style="text-decoration:none;" href="{% url 'tag_post_list' slug=tag.slug %}" >{{ tag }}|</a>
+                  {% endfor %}
+                  </p>
+                  <p class="card-text">{{ post.text|truncatewords:'25' }}</p>
+                  <a href="{% url 'post_detail' post.slug %}" ></a>
+                </div>
+              </div>
+          {% endfor %}
+        </div>
+    {% endblock %}
+</body>

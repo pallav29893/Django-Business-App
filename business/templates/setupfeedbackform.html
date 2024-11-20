@@ -1,0 +1,126 @@
+{% extends 'business_base.html' %} {% load static %} {% block content %}
+
+<div style="display: flex; justify-content: end; padding: 10px">
+  <a
+    class="btn"
+    style="color: black; background-color: #eb308e"
+    href="{% url 'addform' %}"
+  >
+    Add form
+  </a>
+</div>
+
+<div style="border: 1px solid black">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>id</th>
+        <th>Name</th>
+        <th>Text Questions</th>
+        <th>Rating Questions</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for form in forms_data %}
+      <tr>
+        <td>{{ form.id }}</td>
+        <td>
+          {% if form.name %}
+          <a
+            href="{% url 'setup_feedback_form_details' form_type=form.name %}"
+            style="text-decoration: none"
+            >{{ form.name }}</a
+          >
+          {% else %}
+          <span>No form name</span>
+          {% endif %}
+        </td>
+
+        <td>{{ form.text_questions_count }}</td>
+        <td>{{ form.ratings_count }}</td>
+        <td>
+          <form method="post" onsubmit="return confirmStatusChange('{{ form.status }}');">
+              {% csrf_token %}
+              <input type="hidden" name="form_id" value="{{ form.id }}">
+              {% if form.status == "Active" %}
+                  <button type="submit" class="btn btn-success">{{ form.status }}</button>
+              {% else %}
+                  <button type="submit" class="btn btn-danger">{{ form.status }}</button>
+              {% endif %}
+          </form>
+      </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5">No feedback forms available.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Edit Form Modal -->
+<!-- <div class="modal fade" id="editFormModal" tabindex="-1" role="dialog" aria-labelledby ="editFormModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editFormModalLabel">Edit Form</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editFormForm">
+                    <input type="hidden" id="editFormId">
+                    <div class="form-group">
+                        <label for="editFormName">Form Name</label>
+                        <input type="text" class="form-control" id="editFormName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editFormStatus">Status</label>
+                        <select class="form-control" id="editFormStatus">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveEditForm">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<!-- Delete Confirmation Modal -->
+<!-- <div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmModalLabel">Confirm Deletion</h5>
+                
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this form?
+            </div>
+            <div class="modal-footer">
+                
+                <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+  function confirmStatusChange(currentStatus) {
+      const newStatus = currentStatus === "Active" ? "Inactive" : "Active";
+      return confirm(`Are you sure you want to change the status from ${currentStatus} to ${newStatus}?`);
+  }
+</script>
+
+{% endblock %}

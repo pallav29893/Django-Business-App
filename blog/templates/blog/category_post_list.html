@@ -1,0 +1,22 @@
+{% extends 'blog/base.html' %}
+
+    {% block title %}<title>{{ category.name }}</title>{% endblock %}
+
+<body>
+    {% block content %}
+    <h1>Category:-{{ category.name }}</h1>
+       
+    <div style="display: flex; flex-wrap: wrap;">
+        {% for post in posts %}
+              <div class="card" style="margin-right: 60px; width: 300px;margin-top: 70px; box-shadow: 10px 10px 15px #ffa500;">
+                <img style="width: 300px; height: 250px;" src="{% if post.feature_image %}{{post.feature_image.url}} {% else %} {% endif %}" class="card-img-top" alt="...">
+                <div class="card-body" style="margin-bottom: 50px; height: 150px;">
+                  <h5 class="card-title"> <a href="{% url 'post_detail' post.slug %}" >{{ post.title }}</a></h5>
+                  <p class="card-text">{{ post.text|truncatewords:'25' }}</p>
+                 
+                </div>
+              </div>
+          {% endfor %}
+        </div>
+    {% endblock %}
+</body>

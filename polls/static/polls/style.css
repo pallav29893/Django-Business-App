@@ -1,0 +1,8 @@
+li a {
+    color: green;
+}
+body {
+    background: white url("images/datavisuals.webp") no-repeat ;
+    width: cover;
+    height: auto;
+}

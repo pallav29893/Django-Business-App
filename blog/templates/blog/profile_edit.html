@@ -1,0 +1,30 @@
+{% extends 'blog/base.html' %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Profile</title>
+</head>
+<body>
+    {% block content %}
+    <h2>Edit Profile</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="edit-profile">
+          <h3>phone_number</h3>
+          <input type="text" name="phone_number" value="{{ user.phone_number }}" maxlength="30" id="id_phone_number">
+          <h3>Username</h3>
+          <input type="text" name="username" value="{{ user.username }}" maxlength="150" required="" id="id_username">
+          <h3>city</h3>
+          <input type="text" name="city" value="{{ user.city }}" maxlength="400" id="id_city">
+          <h3>Email</h3>
+          <input type="email" name="email" value="{{ user.email }}" maxlength="254" id="id_email">
+          <h3>state</h3>
+          <input type="state" name="state" value="{{ user.state }}" maxlength="254" id="id_state">
+          <h3>country</h3>
+          <input type="country" name="country" value="{{ user.country }}" maxlength="254" id="id_country">
+          <button type="submit">Submit</button>
+        </div>
+      </form>
+      {% endblock %}
+</body>
+</html>

@@ -1,0 +1,38 @@
+{% extends 'blog/base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ user.username }}'s Profile</title>
+    <style>
+      #a{ 
+        text-align: center;
+        justify-content: center;
+
+      }
+    </style>
+</head>
+<body>
+    {% block content %}
+    <div style="border: 2px solid black; background-color: rgb(238, 234, 234); margin-right: 400px; margin-left: 400px; margin-bottom:100px ; text-align: center; display: flex; flex-direction: column;">
+      <h1>My Profile</h1>
+      <div >
+        <img style="border-radius:700px; height: 100px; width:100px ;" src="{% if user.user_profile_image %}{{ user.user_profile_image.url }}{% else %}{% endif %}" alt="Profile Picture">
+      </div>
+      <div style="text-align:left;">
+      <p><b>&nbsp Username: {{user.username }}</b></p>
+      <p><b>&nbsp phone_number: {{user.phone_number }}</b></p>
+      <p><b>&nbsp email: {{user.email }}</b></p>
+      <p><b>&nbsp city: {{user.city }}</b></p>
+      <p><b>&nbsp state: {{user.state }}</b></p>
+      <p><b>&nbsp country: {{user.country }}</b></p>
+    </div>
+    <!-- <button>edit</button> -->
+    <a class="btn btn-secondary" href="{% url 'profile_edit' %}">
+      {% include './icon/pencil-fill.svg' %}
+  </a>
+    </div>
+    {% endblock %}
+</body>
+</html>

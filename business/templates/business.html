@@ -1,0 +1,143 @@
+{% extends 'business_base.html' %}
+{% load static %}
+{% block content %}
+
+{% if request.user.is_authenticated %}
+
+<div style="display: grid; gap: 20px;">
+<!-- <div class="review-container"> 
+  <div class="review-header">
+      <div class="review-rating">
+          <b>Feedbacks</b> <span class="stars">★<span style="color: #555; font-size:15px;"> 4.4</span></span>
+          <span class="results">(100 Results)</span>
+      </div> -->
+      <!-- <div class="filter-tags">
+          <span>FarmAll Tags</span>
+          <span>Dining</span>
+      </div> -->
+  <!-- </div> -->
+
+  <!-- <div class="review-card"> -->
+      <!-- <div class="review-info">
+          <div class="review-title">
+              <h4>The Game Palacio (Noida)</h4>
+              <span class="review-date">Thu, Oct 3, 2024 10:33 AM</span>
+          </div>
+          <div class="rating-stars">
+              <i class="fas fa-star star"></i>
+              <i class="fas fa-star star"></i>
+              <i class="fas fa-star star"></i>
+              <i class="fas fa-star-half-alt star"></i>
+              <i class="far fa-star star"></i>
+          </div>
+      </div> -->
+
+      <!-- <div class="review-content">
+          <div class="review-user" style="display: flex">
+            <img src="./../static/css/images/no profile.jpeg" style="height: 35px; width: 35px;" />
+            <div style="display: flex; flex-direction: column;" >
+              <div style="display:flex; gap: 20px;">
+              <span class="user-name">Pallav choudhary</span>
+              <div style="border: 1px solid rgb(38, 223, 21);
+              background-color: rgb(229, 240, 215);
+              border-radius: 20px;
+              padding-inline: 15px;
+          ">
+              <span style="color: rgb(38, 223, 21);" class="fa fa-star"></span>
+              <span style="color: rgb(38, 223, 21);" class="fa fa-star checked"></span>
+              <span style="color: rgb(38, 223, 21);"class="fa fa-star checked"></span>
+              <span style="color: rgb(38, 223, 21);" class="fa fa-star"></span>
+              <span style="color: rgb(38, 223, 21);" class="fa fa-star"></span>
+            </div>
+            </div>
+              <span class="review-meta">
+                <span class="add-phone" style="color: deeppink;"><i class="fa-solid fa-arrow-up-wide-short" ></i></span><span style="color: black;"> Add Order id</span> |
+                <span class="order-id" style="color: deeppink;"><i class="fa-regular fa-envelope"></i></span><span style="color: black;"> Add Email</span> |
+                <span class="add-time" style="color: deeppink;"><i class="fa-solid fa-phone"></i></span><span style="color: black;"> Add Phone</span> 
+              </span>
+            </div>
+          </div><br>
+       
+          <div class="review-text">
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem perspiciatis qui aliquam sequi unde exercitationem veniam dolorum necessitatibus. Nulla unde impedit cumque voluptates ab, deleniti sapiente laudantium quasi reiciendis. Eum? Lorem ipsum dolor sit amet consectetur, adipisicing elit. Harum tempora deleniti alias omnis pariatur labore cupiditate, recusandae modi doloremque corrupti.</p>
+          </div>
+        </div>
+        <div style="margin-top: 10px;">
+        <p style="font-weight: 600; font-size: 11px;color: gray;">sat,oct 5,2024 5:04</p>
+        </div> -->
+       
+      <!-- <div class="review-footer">
+          <div class="response-status">
+              <span>Not responded</span>
+          </div>
+          <div class="response-actions">
+              <span>Dining</span>
+          </div>
+      </div> -->
+  <!-- </div>
+</div> -->
+
+<div class="review-container">
+  <div class="review-header">
+      <div class="review-rating">
+          <b>Feedbacks</b>
+          <span class="stars">
+              {% for _ in avg_rating_range %}★{% endfor %}
+              {% for _ in avg_rating_empty_range %}☆{% endfor %}
+              <span style="color: black;">{{ avg_rating }}</span>
+          </span>
+          <span class="results">({{ feedbacks|length }} Results)</span>
+        </div>
+        <!-- <button class="btn" style="background-color: #eb308e; display: flex; gap: 5px; align-items: center;"><i class="fa-solid fa-download"></i>Export</button> -->
+        <button class="btn" style="background-color: #eb308e">
+          <a href="{% url 'download_feedbacks_csv' %}" style="color: white; text-decoration: none; display: flex;gap: 5px; align-items: center;">
+              <i class="fa-solid fa-download"></i>Export
+          </a>
+      </button>
+</div>
+</div>
+  {% for feedback in feedbacks %}
+<div class="review-container">
+
+  <div class="review-card"  >
+      <div class="review-content" style="display: flex; justify-content: space-between;">
+          <div class="review-user" style="display: flex">
+            <img src="./../static/css/images/no profile.jpeg" style="height: 35px; width: 35px;" />
+              <div style="display: flex; flex-direction: column;">
+                  <!-- <div style="display:flex; gap: 20px;margin-top: 0%;"> -->
+                    <div style="display:flex; gap: 20px;">
+                      <span class="user-name">{{ feedback.name }}</span>
+                      <!-- <span class="user-name"><i class="fa-solid fa-user fa-2xl" style="color: gray; "></i>  <span style="margin-top: 20px;font-size: larger;"></span> {{ feedbacks.name }}</span> -->
+                      <div style="border: 1px solid rgb(38, 223, 21); background-color: rgb(229, 240, 215); border-radius: 20px; padding-inline: 15px; color: rgb(38, 223, 21);">
+                          {% for _ in feedback.star_range %}★{% endfor %}
+                          {% for _ in feedback.empty_star_range %}☆{% endfor %}
+                      </div>
+                  </div>
+                  <span class="review-meta">
+                      <span style="color: grey;" class="order-id"> <i class="fa-regular fa-envelope" style="color: deeppink;"></i> {{ feedback.email }} |</span>
+                      <span style="color: grey;" class="add-time"> <i class="fa-solid fa-phone" style="color: deeppink;"></i>  {{ feedback.phone_number }}</span>
+                  </span>
+              </div>
+            
+            </div>
+            <p>{{ feedback.form_type }}</p>
+          </div>
+          <div class="review-text">
+             <p style="font-size: small;margin-bottom: 0px;"> <strong>Feedback:</strong> {{ feedback.text|linebreaksbr }}</p>
+              <br>
+              <p style="font-size: small;margin-bottom: 0px;"><strong>Rating Details:</strong> {{ feedback.rating|linebreaksbr  }}</p>
+          </div>
+      </div>
+      <div style="margin-top: 12px;">
+          <p style="color: grey;font-size: small; margin-left: 15px;">{{ feedback.created_at|date:"D, M d, Y H:i" }}</p>
+      </div>
+      </div>
+  {% empty %}
+  <p>No feedbacks available yet.</p>
+  {% endfor %}
+</div>
+
+{% endif %}
+{% endblock %}
+
+

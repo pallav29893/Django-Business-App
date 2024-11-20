@@ -1,0 +1,90 @@
+{% extends 'business_base.html' %} {% block content %}
+
+<h1>Feedback Form</h1>
+<div
+  style="
+    border: 1px solid;
+    box-shadow: 3px 3px 3px #5a5457;
+    width: 100%;
+    background-color: #efefef;
+    border-radius: 10px;
+  "
+>
+  <form
+    id="feedbackForm"
+    method="post"
+    action="{% url 'customer_feedback' business.id form.id form.name %}"
+    style="padding: 20px; display: grid"
+  >
+    {% csrf_token %}
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required /><br />
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required /><br />
+
+    <label for="phone">Phone Number:</label>
+    <input type="number" id="phone" name="phone" required /><br />
+
+    {% for question in text_questions %}
+    <label for="text_question_{{ question.id }}">{{ question.text }}</label>
+    <textarea
+      id="text_question_{{ question.id }}"
+      name="text_question_{{ question.id }}"
+      required
+    ></textarea
+    ><br />
+    {% endfor %} {% for question in rate_questions %}
+    <fieldset>
+      <legend>{{ question.rating }}</legend>
+      {% for star in '12345'|make_list %}
+      <label>
+        <input
+          type="radio"
+          name="rate_question_{{ question.id }}"
+          value="{{ star }}"
+        />
+        {{ star }}
+      </label>
+      {% endfor %}
+    </fieldset>
+    {% endfor %}
+
+    <button
+      type="submit"
+      class="btn"
+      style="color: white; background-color: #eb308e"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var form = document.getElementById("feedbackForm");
+
+    form.onsubmit = function (e) {
+      e.preventDefault();
+      fetch(form.action, {
+        method: "POST",
+        body: new FormData(form),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === "success") {
+            alert("Feedback submitted successfully!");
+            form.reset();
+          } else {
+            alert("Error submitting feedback. Please try again.");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert("An error occurred. Please try again.");
+        });
+    };
+  });
+</script>
+
+{% endblock %}
